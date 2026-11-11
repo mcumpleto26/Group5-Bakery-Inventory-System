@@ -1,2 +1,3 @@
-# Group5-Bakery-Inventory-System
-CS 108 Final Project (Group 5): Console-based Inventory Management System for a bakery or cafe, written in Java using OOP.
+# Group 5: Bakery and Cafe Inventory Management System
+CS 108 Object-Oriented Programming, Final Project
+Members: Member 1 Romarie Babol, Member 2 Mae Ann Cumpleto, Member 3 Abigail Libanan
