@@ -15,4 +15,5 @@ public int getSequenceNo() { return sequenceNo; }
 public String getType() { return type; }
 public String getProductId() { return productId; }
 public int getQuantity() { return quantity; }
+
 }
