@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 // Menu skeleton and console input validation helpers for Member 3
@@ -100,5 +101,16 @@ public class InventoryApp {
             }
             System.out.println("Please enter Y or N.");
         }
+    }
+    private void printHeader() {
+        System.out.printf("%-8s %-20s %-12s %10s %6s %s%n",
+                "ID", "Name", "Category", "Price", "Qty", "Details");
+        System.out.println("------------------------------------------------------------------------");
+    }
+
+    private void printRow(Product p) {
+        System.out.printf("%-8s %-20s %-12s %10.2f %6d %s%n",
+                p.getId(), p.getName(), p.getCategory(),
+                p.getUnitPrice(), p.getQuantity(), p.getCategoryDetails());
     }
 }
