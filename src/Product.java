@@ -5,8 +5,8 @@ public abstract class Product {
     private int quantity;
     private int reorderLevel;
 
-     public Product(String id, String name, double unitPrice, int quantity, 
-int reorderLevel) {
+    public Product(String id, String name, double unitPrice, int quantity,
+                   int reorderLevel) {
         if (id == null || id.trim().isEmpty()) {
             throw new IllegalArgumentException("ID cannot be empty.");
         }
@@ -17,19 +17,24 @@ int reorderLevel) {
         setReorderLevel(reorderLevel);
     }
 
-     public void setName(String name) {
+    public void setName(String name) {
         if (name == null || name.trim().isEmpty()) {
             throw new IllegalArgumentException("Name cannot be empty.");
         }
         this.name = name.trim();
     }
+
     public void setUnitPrice(double unitPrice) {
+        // NaN fails every comparison, so it has to be checked explicitly
+        if (Double.isNaN(unitPrice) || Double.isInfinite(unitPrice)) {
+            throw new IllegalArgumentException("Price must be a valid number.");
+        }
         if (unitPrice < 0) {
             throw new IllegalArgumentException("Price cannot be negative.");
         }
-
-      this.unitPrice = unitPrice;
+        this.unitPrice = unitPrice;
     }
+
     public void setQuantity(int quantity) {
         if (quantity < 0) {
             throw new IllegalArgumentException("Quantity cannot be negative.");
@@ -44,14 +49,17 @@ int reorderLevel) {
         this.reorderLevel = reorderLevel;
     }
 
-     public void addStock(int amount) {
+    public void addStock(int amount) {
         if (amount <= 0) {
             throw new IllegalArgumentException("Amount must be greater than zero.");
+        }
+        if (amount > Integer.MAX_VALUE - quantity) {
+            throw new IllegalArgumentException("Stock would exceed the maximum allowed quantity.");
         }
         quantity += amount;
     }
 
-     public void removeStock(int amount) {
+    public void removeStock(int amount) {
         if (amount <= 0) {
             throw new IllegalArgumentException("Amount must be greater than zero.");
         }
@@ -61,18 +69,36 @@ int reorderLevel) {
         quantity -= amount;
     }
 
-     public double getInventoryValue() {
+    public double getInventoryValue() {
         return unitPrice * quantity;
     }
+
     public boolean isLowStock() {
         return quantity <= reorderLevel;
     }
 
-     // getId(), getName(), getUnitPrice(), getQuantity(), getReorderLevel() 
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public double getUnitPrice() {
+        return unitPrice;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public int getReorderLevel() {
+        return reorderLevel;
+    }
 
     public abstract String getCategory();
     public abstract String getCategoryDetails();
     public abstract String getDetailPrompt();
     public abstract void updateCategoryDetail(String value);
 }
-

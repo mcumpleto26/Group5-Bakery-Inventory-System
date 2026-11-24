@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 // Menu skeleton and console input validation helpers for Member 3
@@ -18,7 +19,7 @@ public class InventoryApp {
             choice = readInt("Choose an option: ");
             switch (choice) {
                 case 1: System.out.println("Add product: coming soon"); break;
-                case 2: System.out.println("View all: coming soon"); break;
+                case 2: viewAllProducts(); break;
                 case 3: System.out.println("Search: coming soon"); break;
                 case 4: System.out.println("Update: coming soon"); break;
                 case 5: System.out.println("Delete: coming soon"); break;
@@ -99,6 +100,30 @@ public class InventoryApp {
                 return false;
             }
             System.out.println("Please enter Y or N.");
+        }
+    }
+    private void printHeader() {
+        System.out.printf("%-8s %-20s %-12s %10s %6s %s%n",
+                "ID", "Name", "Category", "Price", "Qty", "Details");
+        System.out.println("------------------------------------------------------------------------");
+    }
+
+    private void printRow(Product p) {
+        System.out.printf("%-8s %-20s %-12s %10.2f %6d %s%n",
+                p.getId(), p.getName(), p.getCategory(),
+                p.getUnitPrice(), p.getQuantity(), p.getCategoryDetails());
+    }
+
+    // Menu option 2: shows every product in a table
+    private void viewAllProducts() {
+        ArrayList<Product> items = inventory.getProducts();
+        if (items.isEmpty()) {
+            System.out.println("No products in inventory.");
+            return;
+        }
+        printHeader();
+        for (Product p : items) {
+            printRow(p);
         }
     }
 }
