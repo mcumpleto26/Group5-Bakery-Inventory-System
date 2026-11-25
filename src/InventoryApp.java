@@ -18,11 +18,11 @@ public class InventoryApp {
             printMenu();
             choice = readInt("Choose an option: ");
             switch (choice) {
-                case 1: System.out.println("Add product: coming soon"); break;
+                case 1: addProduct(); break;
                 case 2: viewAllProducts(); break;
-                case 3: System.out.println("Search: coming soon"); break;
-                case 4: System.out.println("Update: coming soon"); break;
-                case 5: System.out.println("Delete: coming soon"); break;
+                case 3: searchProduct(); break;
+                case 4: updateProduct(); break;
+                case 5: deleteProduct(); break;
                 case 6: System.out.println("Stock in: coming soon"); break;
                 case 7: System.out.println("Stock out: coming soon"); break;
                 case 8: System.out.println("Low stock: coming soon"); break;
@@ -124,6 +124,138 @@ public class InventoryApp {
         printHeader();
         for (Product p : items) {
             printRow(p);
+        }
+    }
+
+    // Menu option 1: adds a new baked good, beverage, or ingredient
+    private void addProduct() {
+        System.out.println("--- Add product ---");
+        System.out.println("1. Baked Good");
+        System.out.println("2. Beverage");
+        System.out.println("3. Ingredient");
+        int type;
+        while (true) {
+            type = readInt("Choose a category (1-3): ");
+            if (type >= 1 && type <= 3) {
+                break;
+            }
+            System.out.println("Please choose 1, 2, or 3.");
+        }
+
+        String id = readNonEmpty("Enter ID: ");
+        if (inventory.findById(id) != null) {
+            System.out.println("A product with ID " + id + " already exists.");
+            return;
+        }
+        String name = readNonEmpty("Enter name: ");
+        double price = readDouble("Enter unit price: ");
+        int quantity = readInt("Enter starting quantity: ");
+        int reorderLevel = readInt("Enter reorder level: ");
+
+        try {
+            Product p;
+            if (type == 1) {
+                int shelfLife = readInt("Enter shelf life in days: ");
+                p = new BakedGood(id, name, price, quantity, reorderLevel, shelfLife);
+            } else if (type == 2) {
+                int sizeMl = readInt("Enter size in ml: ");
+                p = new Beverage(id, name, price, quantity, reorderLevel, sizeMl);
+            } else {
+                String unit = readNonEmpty("Enter unit (for example kg or L): ");
+                p = new Ingredient(id, name, price, quantity, reorderLevel, unit);
+            }
+
+            if (inventory.addProduct(p)) {
+                System.out.println("Product added successfully.");
+            } else {
+                System.out.println("Could not add the product.");
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println("Could not add product: " + e.getMessage());
+        }
+    }
+
+    // Menu option 3: finds products whose name contains the keyword
+    private void searchProduct() {
+        String keyword = readNonEmpty("Enter part of the product name: ");
+        ArrayList<Product> results = inventory.searchByName(keyword);
+        if (results.isEmpty()) {
+            System.out.println("No products found for \"" + keyword + "\".");
+            return;
+        }
+        System.out.println(results.size() + " product(s) found:");
+        printHeader();
+        for (Product p : results) {
+            printRow(p);
+        }
+    }
+
+    // Menu option 4: changes one field of an existing product
+    private void updateProduct() {
+        String id = readNonEmpty("Enter the ID of the product to update: ");
+        Product p = inventory.findById(id);
+        if (p == null) {
+            System.out.println("No product found with ID " + id + ".");
+            return;
+        }
+
+        printHeader();
+        printRow(p);
+        System.out.println();
+        System.out.println("1. Name");
+        System.out.println("2. Unit price");
+        System.out.println("3. Reorder level");
+        System.out.println("4. " + p.getCategory() + " detail");
+        System.out.println("0. Cancel");
+        int field = readInt("What do you want to update? ");
+
+        try {
+            switch (field) {
+                case 1:
+                    inventory.updateName(id, readNonEmpty("Enter new name: "));
+                    break;
+                case 2:
+                    inventory.updatePrice(id, readDouble("Enter new unit price: "));
+                    break;
+                case 3:
+                    inventory.updateReorderLevel(id, readInt("Enter new reorder level: "));
+                    break;
+                case 4:
+                    inventory.updateCategoryDetail(id, readNonEmpty(p.getDetailPrompt()));
+                    break;
+                case 0:
+                    System.out.println("Update cancelled.");
+                    return;
+                default:
+                    System.out.println("Choose a number from 0 to 4.");
+                    return;
+            }
+            System.out.println("Product updated successfully.");
+            printHeader();
+            printRow(p);
+        } catch (NumberFormatException e) {
+            System.out.println("Update failed: please enter a valid whole number.");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Update failed: " + e.getMessage());
+        }
+    }
+
+    // Menu option 5: removes a product after confirmation
+    private void deleteProduct() {
+        String id = readNonEmpty("Enter the ID of the product to delete: ");
+        Product p = inventory.findById(id);
+        if (p == null) {
+            System.out.println("No product found with ID " + id + ".");
+            return;
+        }
+
+        printHeader();
+        printRow(p);
+        if (readYesNo("Delete this product? (Y/N): ")) {
+            inventory.deleteProduct(id);
+            System.out.println("Product deleted.");
+        } else {
+            System.out.println("Delete cancelled.");
         }
     }
 }
