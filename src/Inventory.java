@@ -147,15 +147,20 @@ public class Inventory {
         return new ArrayList<>(transactions);
     }
 
-    // BV002 and IN002 start below their reorder level on purpose (low-stock demo)
+       // Team products plus ingredients. BG004, BV005, and IN002 start at or below
+    // their reorder level on purpose, so the low-stock alert has something to show.
     public void loadSampleData() {
-        addProduct(new BakedGood("BG001", "Pan de Sal", 5.00, 120, 40, 2));
-        addProduct(new BakedGood("BG002", "Ensaymada", 25.00, 30, 10, 3));
-        addProduct(new BakedGood("BG003", "Chocolate Cake", 650.00, 5, 2, 4));
+        addProduct(new BakedGood("BG001", "Cookies", 90, 40, 10, 5));
+        addProduct(new BakedGood("BG002", "Chocolate Muffins", 75, 30, 10, 3));
+        addProduct(new BakedGood("BG003", "Cinnamon Rolls", 80, 25, 8, 2));
+        addProduct(new BakedGood("BG004", "Croissants", 95, 6, 8, 2));
 
-        addProduct(new Beverage("BV001", "Iced Coffee", 90.00, 40, 15, 500));
-        addProduct(new Beverage("BV002", "Milk Tea", 85.00, 8, 10, 500));
-        addProduct(new Beverage("BV003", "Hot Chocolate", 75.00, 25, 10, 350));
+        addProduct(new Beverage("BV001", "Brewed Coffee", 60, 50, 15, 240));
+        addProduct(new Beverage("BV002", "Iced Tea", 55, 45, 12, 350));
+        addProduct(new Beverage("BV003", "Hot Chocolate", 85, 35, 10, 300));
+        addProduct(new Beverage("BV004", "Mango Smoothie", 110, 30, 8, 450));
+        addProduct(new Beverage("BV005", "Iced Latte", 95, 9, 11, 400));
+        addProduct(new Beverage("BV006", "Orange Juice", 70, 28, 9, 330));
 
         addProduct(new Ingredient("IN001", "All-Purpose Flour", 48.00, 50, 20, "kg"));
         addProduct(new Ingredient("IN002", "White Sugar", 62.00, 6, 10, "kg"));
